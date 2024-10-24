@@ -1,0 +1,123 @@
+<!DOCTYPE html>
+<html lang="es" xmlns:th="http://www.thymeleaf.org">
+<head th:replace="~{snippet/head::head}">
+    <meta charset="UTF-8">
+    <title>Lista de Llamadas</title>
+</head>
+<body>
+<nav th:replace="~{snippet/nav-bar-auditor::menu}" class="nav"></nav>
+<div class="container">
+    <div class="container custom-container">
+        <h1 style="color: white;">Lista de Llamadas</h1>
+    </div>
+    <div class="container mt-3">
+        <form style="margin-top: 120px" th:action="@{/llamada/listar}" method="post">
+            <div class="row">
+                <div class="col">
+                    <label for="dniEmpleado" class="form-label">DNI del Empleado:</label>
+                </div>
+                <div class="col">
+                    <input type="number" class="form-control" id="dniEmpleado" name="dniEmpleado"
+                           th:value="${dniEmpleado}">
+                </div>
+                <div class="col">
+                    <button class="btn btn-info" type="submit">Buscar</button>
+                </div>
+            </div>
+        </form>
+        <br />
+        <table id="tablaLlamadas" class="table table-hover table-striped" th:if="${llamadas != null}">
+            <thead>
+            <tr>
+                <th>Número de Orden</th>
+                <th>Numero de Cliente</th>
+                <th>Tipo</th>
+                <th>Área</th>
+                <th>Subárea</th>
+                <th>Estado</th>
+                <th>Dni Empleado</th>
+                <th>Nombre Empleado</th>
+                <th>Apellido Empleado</th>
+                <th>Dni Cliente</th>
+                <th>Nombre Cliente</th>
+                <th>Estado</th>
+                <th>Acciones</th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr th:each="llamada : ${llamadas}">
+                <td th:text="${llamada.numeroOrden}"></td>
+                <td th:text="${llamada.cliente.numeroCliente}"></td>
+                <td th:text="${llamada.tipo}"></td>
+                <td th:text="${llamada.area}"></td>
+                <td th:text="${llamada.subarea}"></td>
+                <td th:text="${llamada.estado}"></td>
+                <td th:text="${llamada.empleado.dniEmpleado}"></td>
+                <td th:text="${llamada.empleado.nombreEmpleado}"></td>
+                <td th:text="${llamada.empleado.apellidoEmpleado}"></td>
+                <td th:text="${llamada.cliente.dniCliente}"></td>
+                <td th:text="${llamada.cliente.nombreCliente + ' ' + llamada.cliente.apellidoCliente}"></td>
+                <td th:text="${llamada.estadoAuditoria == false ? 'Sin Auditar' : 'Auditado'}"></td>
+                <td>
+                    <div th:if="${llamada.estadoAuditoria == false}">
+                        <a th:href="@{/evaluacion/crear/}+${llamada.numeroOrden}"><i
+                                class="fa-solid fa-pen-to-square"></i></a>
+                    </div>
+                    <div th:if="${llamada.estadoAuditoria == true}">
+                        <a th:href="@{'/llamada/detail/' + ${llamada.numeroOrden}}"><i class="fa-solid fa-eye"></i></a>
+                        <a th:href="@{'/llamada/detail/' + ${llamada.numeroOrden}}"><i class="fa-solid fa-file-pen"></i></a>
+                        <a th:href="@{'/llamada/report/' + ${llamada.numeroOrden}}" target="_blank"><i class="fa-solid fa-file-pdf"></i></a>
+                        <!--<a href="#">Editar</a>-->
+                    </div>
+                </td>
+            </tr>
+            </tbody>
+        </table>
+        <table id="tablaLlamadas1" class="table table-hover" th:if="${llamadas == null}">
+            <thead>
+            <tr>
+                <th>Número de Orden</th>
+                <th>Numero de Cliente</th>
+                <th>Tipo</th>
+                <th>Área</th>
+                <th>Subárea</th>
+                <th>Estado</th>
+                <th>Observaciones</th>
+                <th>Dni Empleado</th>
+                <th>Nombre Empleado</th>
+                <th>Apellido Empleado</th>
+                <th>Dni Cliente</th>
+                <th>Nombre Cliente</th>
+                <th>Estado</th>
+                <th>Acciones</th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+            </tr>
+            </tbody>
+        </table>
+        <!-- Manejo de caso en que no se encuentran resultados -->
+        <div th:if="${llamadas == null}">
+            <p>No se encontraron llamadas para el DNI de empleado proporcionado.</p>
+        </div>
+    </div>
+</div>
+<script th:src="@{/js/jquery/jquery.js}"></script>
+<script th:src="@{/js/bootstrap/bootstrap.bundle.js}"></script>
+</body>
+</html>

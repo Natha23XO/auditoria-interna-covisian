@@ -1,0 +1,114 @@
+<!DOCTYPE html>
+<html lang="es" xmlns:th="http://www.thymeleaf.org">
+<head th:replace="~{snippet/head :: head}">
+    <title>Auditorias</title>
+</head>
+<body>
+<nav th:replace="~{snippet/nav-bar-empleado :: menu}" class="nav"></nav>
+<section class="dashboard">
+    <div class="dash-content">
+        <div class="overview">
+            <div class="title">
+                <i class="uil uil-tachometer-fast-alt"></i>
+                <span class="text">Mis auditorias</span>
+            </div>
+            <table class="table table-striped">
+                <thead>
+                <tr>
+                    <th>Id Evaluacion</th>
+                    <th>Nota</th>
+                    <th>Observaciones</th>
+                    <th>Evaluador</th>
+                    <th>Cliente</th>
+                    <th>Llamada</th>
+                    <th class="checkbox-column">Ver</th>
+                    <th>Firmar</th>
+                </tr>
+                </thead>
+                <tbody>
+                <tr th:each="evaluacion : ${evaluaciones}">
+                    <td th:text="${evaluacion.idEvaluacion}"></td>
+                    <td class="nota" th:text="${evaluacion.nota}"></td>
+                    <td th:text="${evaluacion.observacionesEvaluacion}"></td>
+                    <td th:text="${evaluacion.auditor.nombreAuditor + ' ' + evaluacion.auditor.apellidoAuditor}"></td>
+                    <td th:text="${evaluacion.llamada.cliente.nombreCliente + ' ' + evaluacion.llamada.cliente.apellidoCliente}"></td>
+                    <td th:text="${evaluacion.llamada.cliente.numeroCliente}"></td>
+                    <td>
+                        <button class="btn btn-info btn-sm ver-detalle"
+                                th:onclick="'abrirModal(\'' + ${evaluacion.idEvaluacion} + '\', \'' + ${evaluacion.llamada.numeroOrden} + '\')'">
+                            <i class="fas fa-eye"></i>
+                        </button>
+                    </td>
+
+                    <td class="checkbox-column">
+                        <form action="/evaluacion/firmar" method="post">
+                            <input type="hidden" name="numeroOrden" th:value="${evaluacion.llamada.numeroOrden}"/>
+                            <input type="checkbox" name="firmarCheckbox" th:checked="${evaluacion.estadoFirma}"
+                                   th:disabled="${evaluacion.estadoFirma}" onchange="this.form.submit()"/>
+                        </form>
+                    </td>
+                </tr>
+                </tbody>
+            </table>
+
+            <!-- Tarjeta del promedio -->
+            <div class="promedio-card">
+                <h2>Promedio de Notas</h2>
+                <p>El promedio es: <span id="promedio"></span></p>
+                <p class="mensaje" id="mensaje"></p>
+            </div>
+
+            <!-- Tarjeta de KPI -->
+            <div class="kpi-card">
+                <div class="d-flex align-items-center">
+                    <i class="fas fa-bell fa-2x mr-2"></i>
+                    <h2 class="mb-0">KPI: Objetivos</h2>
+                </div>
+                <div class="card-body">
+                    <p class="mb-0">Notas de Auditoria Covisian dentro de objetivo: <strong>70 - 90</strong></p>
+                    <p class="mb-0">Notas de Auditoria Covisian fuera de objetivo: <strong>69 - 0</strong></p>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+<!-- Modal -->
+
+<!-- Modal -->
+<div id="verModal" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="verModalLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="verModalLabel">Detalles de la Evaluación</h5>
+                <button type="button" class="btn-close" onclick="cerrarModal()" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <p>Detalles de la llamada:</p>
+                <table class="table table-striped">
+                    <thead>
+                    <tr>
+                        <th>Número de Orden</th>
+                        <th>Tipo</th>
+                        <th>Área</th>
+                        <th>Subárea</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    <tr>
+                        <td id="numeroOrdenModal"></td>
+                        <td id="tipoModal"></td>
+                        <td id="areaModal"></td>
+                        <td id="subareaModal"></td>
+                    </tr>
+                    </tbody>
+                </table>
+            </div>
+
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" onclick="cerrarModal()">Cerrar</button>
+            </div>
+        </div>
+    </div>
+</div>
+</body>
+</html>

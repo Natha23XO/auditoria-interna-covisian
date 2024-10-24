@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html lang="es" xmlns:th="http://www.thymeleaf.org">
+<head th:replace="~{snippet/head :: head}">
+    <title>Lista</title>
+</head>
+<body>
+<nav th:replace="~{snippet/nav-bar-lider :: menu}"></nav>
+<section class="dashboard">
+    <div class="dash-content">
+        <div class="overview">
+            <div class="title">
+                <i class="uil uil-tachometer-fast-alt"></i>
+                <span class="text">Evaluacion de Empleados</span>
+                <button id="feedback-link" class="nav-link mx-lg-2 ml-4 btn btn-light">Evaluaciones para Feedback</button>
+                <button id="capacitacion-link" class="nav-link mx-lg-2 ml-4 btn btn-light">Evaluaciones para Capacitación</button>
+
+            </div>
+            <table class="table table-striped" id="tablaEvaluaciones" th:if="${evaluaciones != null}">
+                <thead>
+                <tr>
+                    <th>ID</th>
+                    <th>Nombre Empleado</th>
+                    <th>Nombre Cliente</th>
+                    <th>Observaciones</th>
+                    <th>Nota</th>
+                    <th>Ver</th>
+                </tr>
+                </thead>
+                <tbody>
+                <tr th:each="evaluacion : ${evaluaciones}">
+                    <td th:text="${evaluacion.idEvaluacion}" class="id-evaluacion"></td>
+                    <td th:text="${evaluacion.empleado.nombreEmpleado} + ' ' + ${evaluacion.empleado.apellidoEmpleado}"></td>
+                    <td th:text="${evaluacion.llamada.cliente.nombreCliente} + ' ' + ${evaluacion.llamada.cliente.apellidoCliente}"></td>
+                    <td th:text="${evaluacion.observacionesEvaluacion}"></td>
+                    <td th:text="${evaluacion.nota}"></td>
+                    <td>
+                        <a th:href="@{'/lider/actualizarCampo?id=' + ${evaluacion.idEvaluacion}}"
+                           class="enlace-actualizar">
+                            <i th:class="${evaluacion.estadoLider} ? 'uil uil-eye campo-verde' : 'uil uil-eye campo-amarillo'"></i>
+                        </a>
+                    </td>
+                </tr>
+                </tbody>
+            </table>
+
+            <!--Modal view evaluacion-->
+            <div th:replace="~{backoffice/lider/modal/modal-evaluacion :: modal-evaluacion}">
+            </div>
+            <!--Fin Modal-->
+
+            <!--Modal DataParams-->
+            <div th:replace="~{backoffice/lider/modal/modal-data-params :: modal-data-params}">
+            </div>
+            <!--Fin Modal DataParams-->
+
+            <!--Modal New Feedback-->
+            <div th:replace="~{backoffice/lider/modal/modal-new-feedback :: modal-new-feedback}">
+            </div>
+            <!--Fin Modal-->
+
+            <div th:replace="~{backoffice/lider/modal/modal-training :: modal-training}"></div>
+
+        </div>
+    </div>
+
+
+</section>
+<script th:src="@{/js/sweetalert2/sweetalert2.all.min.js}" type="text/javascript"></script>
+<script th:src="@{/js/web/backoffice/lider/lider.js}" type="text/javascript"></script>
+<script th:src="@{/js/web/backoffice/lider/cambiar_estado_lider.js}" type="text/javascript"></script>
+
+<script>
+
+</script>
+</body>
+</html>

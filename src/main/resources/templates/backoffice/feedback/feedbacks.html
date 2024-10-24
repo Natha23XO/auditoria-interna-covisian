@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="es" xmlns:th="http://www.thymeleaf.org">
+<head th:replace="~{snippet/head::head}">
+    <meta charset="UTF-8">
+    <title>Feedbacks</title>
+</head>
+<body>
+
+<th:block th:if="${#authorization.expression('hasAuthority(''EMPLEADO'')')}">
+    <nav th:replace="~{snippet/nav-bar-empleado :: menu}"></nav>
+</th:block>
+<th:block th:if="${#authorization.expression('hasAuthority(''LIDER'')')}">
+    <nav th:replace="~{snippet/nav-bar-lider :: menu}"></nav>
+</th:block>
+<th:block th:if="${#authorization.expression('hasAuthority(''AUDITOR'')')}">
+    <nav th:replace="~{snippet/nav-bar-auditor :: menu}"></nav>
+</th:block>
+
+
+<section class="dashboard">
+    <div class="dash-content">
+        <div class="overview">
+            <div class="title">
+                <i class="uil uil-tachometer-fast-alt"></i>
+                <span class="text">Feedbacks</span>
+            </div>
+
+            <div class="container">
+                <div class="row">
+                    <div class="col-lg-4" th:each="memo : ${memorandums}">
+                        <div class="card card-margin p-4">
+                            <blockquote class="blockquote blockquote-custom bg-white p-5 rounded">
+                                <h3 th:text="${memo.feedback.motivo}"></h3>
+                                <div class="blockquote-custom-icon bg-info shadow-sm"><i
+                                        class="fa fa-quote-left text-white"></i>
+                                </div>
+                                <span th:text="${memo.feedback.empleado.nombreEmpleado} + ' ' + ${memo.feedback.empleado.apellidoEmpleado}"></span>
+                                <hr/>
+                                <h4 th:text="${memo.asunto}"></h4>
+                                <p th:text="${memo.cuerpo}" class="mb-0 mt-2 font-italic"></p>
+                                <footer th:text="${memo.fecha}" class="blockquote-footer pt-4 mt-4 border-top">
+                                </footer>
+                                <div class="text-center">
+                                    <a class="btn btn-outline-danger" th:href="@{'/feedback/report/' + ${memo.idMemorandum}}" target="_blank">
+                                        <i class="fa-solid fa-file-pdf"></i>
+                                    </a>
+                                </div>
+                            </blockquote>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+    </div>
+</section>
+</body>
+</html>

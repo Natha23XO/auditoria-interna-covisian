@@ -1,0 +1,119 @@
+package pe.edu.cibertec.auditoria_interna_covisian.services.impl;
+
+import lombok.AllArgsConstructor;
+import org.springframework.stereotype.Service;
+import pe.edu.cibertec.auditoria_interna_covisian.models.bd.Empleado;
+import pe.edu.cibertec.auditoria_interna_covisian.models.bd.Evaluacion;
+import pe.edu.cibertec.auditoria_interna_covisian.repositories.EvaluacionRepository;
+import pe.edu.cibertec.auditoria_interna_covisian.services.IEvaluacionService;
+
+import java.util.*;
+import java.util.stream.Collectors;
+
+@Service
+@AllArgsConstructor
+public class EvaluacionServiceImpl implements IEvaluacionService {
+
+    private EvaluacionRepository evaluacionRepository;
+
+    @Override
+    public Map<String, Double> obtenerPromediosNotasPorAreas() {
+        Map<String, Double> promediosPorArea = new HashMap<>();
+
+        // Obtener promedio de notas por área
+        promediosPorArea.put("Atencion al Cliente", promedioNotasPorArea("Atencion al Cliente"));
+        promediosPorArea.put("Hogar", promedioNotasPorArea("Hogar"));
+        promediosPorArea.put("Ventas", promedioNotasPorArea("Ventas"));
+        promediosPorArea.put("Cross-selling", promedioNotasPorArea("Cross-selling"));
+
+        // Manejar el caso en el que el valor es null y convertirlo a Double
+        for (Map.Entry<String, Double> entry : promediosPorArea.entrySet()) {
+            entry.setValue(entry.getValue() != null ? entry.getValue() : 0.0);
+        }
+
+        return promediosPorArea;
+    }
+
+    @Override
+    public void save(Evaluacion evaluacion) {
+        evaluacionRepository.save(evaluacion);
+    }
+    @Override
+    public List<Evaluacion> evaluacionesPorArea(String area) {
+        return evaluacionRepository.listaEvaluacionesPorArea(area);
+    }
+    @Override
+    public List<Evaluacion> ultimas5Evaluaciones(String area) {
+        List<Evaluacion> evaluaciones = evaluacionRepository.listaEvaluacionesPorArea(area);
+
+        List<Evaluacion> evalucionesOrdenadas = evaluaciones.stream().sorted(Comparator.comparing(Evaluacion::getFechahora).reversed()).collect(Collectors.toList());
+        int total = evalucionesOrdenadas.size();
+        int inicio = Math.max(total - 5, 0);
+        int fin = total;
+        List<Evaluacion> ultima5 = evaluaciones.subList(inicio,fin);
+        return ultima5;
+    }
+
+    @Override
+    public Evaluacion evaluacionPorId(int id) {
+        return evaluacionRepository.obtenerEvaluacionPorId(id);
+    }
+
+    @Override
+    public int cantEvaluacionesVistasPorLider(String area) {
+        return evaluacionRepository.cantidadEvaluacionesVistasPorLider(area);
+    }
+    @Override
+    public int cantEvaluacionesNoVistasPorLider(String area) {
+        return evaluacionRepository.cantidadEvaluacionesNoVistasPorLider(area);
+    }
+
+    @Override
+    public int evaluacionesAuditadasArea(String area) {
+        return evaluacionRepository.cantidadEvaluaciones(area);
+    }
+
+    @Override
+    public int evaluacionesAprobadasArea(String area) {
+        return evaluacionRepository.cantidadEvaluacionesAprobadas(area);
+    }
+
+    @Override
+    public List<Evaluacion> listaEvaluacionNotification(String area) {
+        return evaluacionRepository.listaEvaluacionNotification(area);
+    }
+
+    @Override
+    public Double promedioNotasPorArea(String area) {
+        return evaluacionRepository.promedioNotasPorArea(area);
+    }
+
+    @Override
+    public List<Evaluacion> obtenerEvaluacionesPorEmpleado(Empleado empleado) {
+        return evaluacionRepository.findByEmpleado(empleado);
+    }
+
+    @Override
+    public Evaluacion obtenerEvaluacionPorNumeroOrden(int numeroOrden) {
+        return evaluacionRepository.findByNumeroOrden(numeroOrden);
+    }
+
+    @Override
+    public Evaluacion evalaucionPorOrden(int orden) {
+        return evaluacionRepository.findByNumeroOrden(orden);
+    }
+
+    @Override
+    public Evaluacion findEvaluacionAndLlamadaByIdAndNumeroOrden(Long idEvaluacion, int numeroOrden) {
+        return evaluacionRepository.findEvaluacionAndLlamadaByIdAndNumeroOrden(idEvaluacion, numeroOrden);
+    }
+
+    @Override
+    public Optional<List<Object[]>> findEvaluacionByNotaBetweenn(Integer from, Integer to) {
+        return evaluacionRepository.findEvaluacionByNotaBetweenn(from, to);
+    }
+  
+    public Evaluacion obtenerEvaluacionesNoVistas(String area) {
+        return null;
+    }
+}

@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html lang="es" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login Form</title>
+    <link th:href="@{/css/web/frontoffice/login.css}" rel="stylesheet">
+    <link th:href="@{/css/bootstrap/bootstrap.css}" rel="stylesheet"/>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.1.1/css/all.min.css">
+    <style>
+
+        .login-button {
+            background-color: #2d9596;
+            color: #fff;
+            font-size: 19px;
+            padding: 8px 20px;
+            border-radius: 50px;
+            text-decoration: none;
+            transition: 0.3s background-color;
+        }
+
+        .login-button:hover {
+            background-color: #00b383;
+        }
+
+        body {
+            background-color: #ECF4D6;
+            font-family: 'Arial', sans-serif; /* Cambiar a una fuente bonita */
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+        }
+
+        .login-container {
+            background-color: #fff;
+            padding: 40px;
+            border-radius: 10px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            text-align: center;
+            animation: pop 0.5s;
+            max-width: 400px;
+            width: 100%; /* Ajuste del ancho al 100% */
+            transform: scale(1.1);
+            margin: 20px auto; /* Centrado horizontal del contenedor */
+        }
+
+        .login-header {
+            color: #333; /* Cambio a un tono azul marino más oscuro */
+            font-size: 32px;
+            animation: textFadeIn 2s forwards;
+            margin-bottom: 20px;
+        }
+
+        button {
+            background-color: #333;
+            color: #fff;
+            border: none;
+            padding: 15px 30px;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: background-color 0.3s, transform 0.2s, color 0.3s;
+            margin-top: 20px;
+        }
+
+        button:hover {
+            background-color: #555;
+            color: #b4d2f2;
+        }
+
+    </style>
+</head>
+
+<body>
+<div class="login-container">
+    <div class="message alert alert-info" th:if="${param.logout}">
+        Deslogeo satisfactorio!
+    </div>
+    <h2 class="login-header">Iniciar sesión</h2>
+    <form th:action="@{/login}" method="post" class="form-group">
+        <div class="input-icon row mb-3">
+            <div class="col d-flex">
+                <input type="text" class="form-control me-4" id="username" name="username" placeholder="Usuario"
+                       required>
+                <i class="fas fa-user col-form-label" style="color: #265073;"></i>
+            </div>
+        </div>
+        <div class="input-icon row mb-3">
+            <div class="col d-flex">
+                <input type="password" class="form-control me-4" id="password" name="password"
+                       placeholder="Ingresa tu contraseña" required>
+                <i class="fas fa-lock col-form-label" style="color: #265073;"></i>
+            </div>
+        </div>
+        <button class="mb-3, login-button" type="submit">Ingresar</button>
+    </form>
+    <div class="message alert alert-danger" th:if="${param.error}">
+        Contraseña o Usuario incorrecto
+    </div>
+</div>
+</body>
+</html>
